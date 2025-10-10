@@ -1,0 +1,8 @@
+{{ object.full_name }}
+{{ object.rank }}
+{{ object.army_number }}
+{{ object.position }}
+{{ object.unit }}
+{{ object.address }}
+
+

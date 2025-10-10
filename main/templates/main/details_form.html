@@ -1,0 +1,15 @@
+<h2>Enter Education, Family & Awards</h2>
+<form method="post">
+  {% csrf_token %}
+  
+  <h3>Education</h3>
+  {{ edu_form.as_p }}
+
+  <h3>Family</h3>
+  {{ fam_form.as_p }}
+
+  <h3>Award</h3>
+  {{ award_form.as_p }}
+
+  <button type="submit">Save All</button>
+</form>

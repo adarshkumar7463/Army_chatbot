@@ -1,0 +1,61 @@
+<!-- templates/main/award_form.html -->
+{% extends 'main/base.html' %}
+{%load static %}
+{% block content %}
+<div class="form-container">
+    <h2 class="form-title">Add Award for Officer # {{ officer.army_number }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.award_name.label }}</label>
+                {{ form.award_name }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.date_awarded.label }}</label>
+                {{ form.date_awarded }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.awarding_authority.label }}</label>
+                {{ form.awarding_authority }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.location.label }}</label>
+                {{ form.location }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.reason.label }}</label>
+            {{ form.reason }}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.citation.label }}</label>
+            {{ form.citation }}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.remarks.label }}</label>
+            {{ form.remarks }}
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.certificate.label }}</label>
+            <div class="file-upload">
+                {{ form.certificate }}
+                <div class="upload-area">
+                    <i class="fas fa-award"></i>
+                    <p>Upload award certificate</p>
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-submit">Add Award</button>
+    </form>
+</div>
+{% endblock %}

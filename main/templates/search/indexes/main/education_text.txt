@@ -1,0 +1,3 @@
+{{ object.officer.full_name }}
+{{ object.degree }}
+{{ object.institution }}

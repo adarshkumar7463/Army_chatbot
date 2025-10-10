@@ -1,0 +1,68 @@
+<!-- templates/main/education_form.html -->
+{% extends 'main/base.html' %}
+{%load static %}
+{% block content %}
+<div class="form-container">
+    <h2 class="form-title">Add Education for Officer # {{ officer.army_number }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.degree.label }}</label>
+                {{ form.degree }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.institution.label }}</label>
+                {{ form.institution }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.year_of_passing.label }}</label>
+                {{ form.year_of_passing }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.grade.label }}</label>
+                {{ form.grade }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.specialization.label }}</label>
+                {{ form.specialization }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.achievements.label }}</label>
+                {{ form.achievements }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.start_date.label }}</label>
+                {{ form.start_date }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.end_date.label }}</label>
+                {{ form.end_date }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.certification.label }}</label>
+            <div class="file-upload">
+                {{ form.certification }}
+                <div class="upload-area">
+                    <i class="fas fa-file-pdf"></i>
+                    <p>Upload certification document</p>
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-submit">Add Education</button>
+    </form>
+</div>
+{% endblock %}

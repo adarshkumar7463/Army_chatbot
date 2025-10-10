@@ -1,0 +1,17 @@
+<!-- templates/test_ocr.html -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="test_image" accept="image/*">
+    <button type="submit">Test OCR</button>
+</form>
+
+{% if original %}
+    <h3>Original Image</h3>
+    <img src="{{ original }}" style="max-width: 100%">
+    
+    <h3>Processed Image</h3>
+    <img src="{{ processed }}" style="max-width: 100%">
+    
+    <h3>OCR Output</h3>
+    <pre>{{ text }}</pre>
+{% endif %}

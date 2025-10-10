@@ -1,0 +1,68 @@
+<!-- templates/main/family_form.html -->
+{% extends 'main/base.html' %}
+{%load static %}
+{% block content %}
+<div class="form-container">
+    <h2 class="form-title">Add Family Member for Officer # {{ officer.army_number }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.name.label }}</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.relation.label }}</label>
+                {{ form.relation }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.dob.label }}</label>
+                {{ form.dob }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.occupation.label }}</label>
+                {{ form.occupation }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.contact.label }}</label>
+                {{ form.contact }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.address.label }}</label>
+            {{ form.address }}
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.blood_group.label }}</label>
+                {{ form.blood_group }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.medical_conditions.label }}</label>
+                {{ form.medical_conditions }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.is_emergency_contact.label }}</label>
+            {{ form.is_emergency_contact }}
+            <span class="check-label">Mark as emergency contact</span>
+        </div>
+        
+        <button type="submit" class="btn-submit">Add Family Member</button>
+    </form>
+</div>
+{% endblock %}

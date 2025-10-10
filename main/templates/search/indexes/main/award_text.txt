@@ -1,0 +1,9 @@
+{{ object.award_name }}
+{{ object.reason }}
+{{ object.date_awarded }}
+{{ object.location }}
+{{ object.officer.full_name }}
+{{ object.officer.army_number }}
+
+
+

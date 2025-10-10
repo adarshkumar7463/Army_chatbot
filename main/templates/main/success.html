@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{%load static %}
+{% block content %}
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h2 class="success-title">Operation Successful!</h2>
+        <p class="success-message">Your data has been successfully submitted to the system.</p>
+        <div class="success-actions">
+            <a href="{% url 'create_officer' %}" class="btn btn-primary">Add Another</a>
+        </div>
+    </div>
+</div>
+{% endblock %}   

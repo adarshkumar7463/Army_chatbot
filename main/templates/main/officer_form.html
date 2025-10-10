@@ -1,0 +1,240 @@
+{% extends 'main/base.html' %}
+{%load static %}
+{% block content %}
+<div class="form-container">
+    <h2 class="form-title">Person Registration</h2>
+    <form method="post" enctype="multipart/form-data" id="officerForm">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.army_number.label }}</label>
+                {{ form.army_number }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.full_name.label }}</label>
+                {{ form.full_name }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.rank.label }}</label>
+                {{ form.rank }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.position.label }}</label>
+                {{ form.position }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.unit.label }}</label>
+                {{ form.unit }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.dob.label }}</label>
+                {{ form.dob }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.enlistment_date.label }}</label>
+                {{ form.enlistment_date }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.phone.label }}</label>
+                {{ form.phone }}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label class="form-label">{{ form.blood_group.label }}</label>
+                {{ form.blood_group }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.address.label }}</label>
+            {{ form.address }}
+        </div>
+        
+        <!-- Add this for full extracted text -->
+        <div class="form-group">
+            <label class="form-label">Full Extracted Text</label>
+            <textarea id="fullExtractedText" class="form-control" rows="4" style="width: 300px;"
+                    placeholder="Full text from document will appear here"></textarea>
+            <small class="form-text text-muted">
+                Review and copy any missing information to the form above
+            </small>
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">{{ form.photo.label }}</label>
+            <div class="file-upload">
+                {{ form.photo }}
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload photo or document</p>
+                </div>
+                <div id="extractionStatus" class="mt-2" style="display:none;">
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Scanning document...
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-submit">Register Person</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const photoInput = document.getElementById('id_photo');
+    const fullTextArea = document.getElementById('fullExtractedText');
+    const statusElement = document.getElementById('extractionStatus');
+    
+    photoInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Validate file type
+        const validTypes = [
+            'image/jpeg', 'image/png', 'image/tiff', 
+            'application/pdf', 'image/bmp', 'image/webp'
+        ];
+        
+        if (!validTypes.includes(file.type)) {
+            alert('Please upload a valid file type: JPG, PNG, TIFF, PDF, BMP, or WebP');
+            this.value = '';
+            return;
+        }
+        
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+            alert('File size exceeds 10MB limit');
+            this.value = '';
+            return;
+        }
+        
+        statusElement.style.display = 'block';
+        statusElement.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Scanning document...';
+        
+        const formData = new FormData();
+        formData.append('photo', file);
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        
+        fetch('{% url "extract_officer_data" %}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Server error: ' + response.status);
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Populate form fields
+                const fields = [
+                    'army_number', 'full_name', 'rank', 'position', 
+                    'unit', 'dob', 'enlistment_date', 'phone', 
+                    'email', 'blood_group', 'address'
+                ];
+                
+                let populatedCount = 0;
+                
+                fields.forEach(field => {
+                    const element = document.getElementById(`id_${field}`);
+                    if (element && data.data[field]) {
+                        element.value = data.data[field];
+                        populatedCount++;
+                    }
+                });
+                
+                // Populate full text area
+                if (data.data.full_text) {
+                    fullTextArea.value = data.data.full_text;
+                }
+                
+                // Show success message
+                statusElement.innerHTML = `
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> 
+                        Extracted ${populatedCount} fields! Full text available below.
+                    </div>
+                `;
+                
+                // Scroll to full text area
+                fullTextArea.scrollIntoView({behavior: 'smooth'});
+                
+            } else {
+                statusElement.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        ${data.error || 'Failed to extract data from document'}
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            statusElement.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Error: ${error.message}
+                </div>
+            `;
+        });
+    });
+    
+    // Add copy to clipboard functionality
+    const copyButtons = `
+    <div class="mt-2">
+        <button class="btn btn-sm btn-outline-secondary" onclick="copyToClipboard('fullExtractedText')">
+            <i class="fas fa-copy"></i> Copy All Text
+        </button>
+        <button class="btn btn-sm btn-outline-info" onclick="findInText()">
+            <i class="fas fa-search"></i> Find in Text
+        </button>
+    </div>`;
+    
+    fullTextArea.insertAdjacentHTML('afterend', copyButtons);
+});
+
+function copyToClipboard(elementId) {
+    const textarea = document.getElementById(elementId);
+    textarea.select();
+    document.execCommand('copy');
+    alert('Text copied to clipboard!');
+}
+
+function findInText() {
+    const searchTerm = prompt('Enter text to find:');
+    if (searchTerm) {
+        const textarea = document.getElementById('fullExtractedText');
+        const content = textarea.value;
+        const index = content.toLowerCase().indexOf(searchTerm.toLowerCase());
+        
+        if (index !== -1) {
+            // Highlight the text
+            textarea.focus();
+            textarea.setSelectionRange(index, index + searchTerm.length);
+            
+            // Scroll to the found text
+            const lineHeight = parseInt(getComputedStyle(textarea).lineHeight);
+            const lines = content.substring(0, index).split('\n').length - 1;
+            textarea.scrollTop = lines * lineHeight;
+        } else {
+            alert('Text not found');
+        }
+    }
+}
+</script>
+
+{% endblock %}

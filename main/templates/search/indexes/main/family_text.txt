@@ -1,0 +1,7 @@
+{{ object.name }}
+{{ object.relation }}
+{{ object.dob }}
+{{ object.occupation }}
+{{ object.contact }}
+{{ object.officer.full_name }}
+{{ object.officer.army_number }}
