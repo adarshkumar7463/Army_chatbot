@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-8vuejq26a9%mb%qs4r_!)xhno7j7h7ir67zse8!vlmb7f)%030'
+SECRET_KEY = //your security key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -85,9 +85,9 @@ DatabaseWrapper.check_database_version_supported = lambda *args, **kwargs: None
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'armydetails',
+        'NAME': 'xyz',  //your database
         'USER': 'root',
-        'PASSWORD': 'adarsh_sql_9608',  
+        'PASSWORD': 'xyz', //your datbase password
         'HOST': 'localhost',
         'PORT': '3307', 
         'OPTIONS': {
